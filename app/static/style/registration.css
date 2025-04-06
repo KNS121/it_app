@@ -1,0 +1,140 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url("/static/images/reg_fon.jpg"); /* Фоновое изображение */
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Убедитесь, что высота body равна высоте окна */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Контейнер для формы */
+.container {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачный фон */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* Убедитесь, что padding включен в общий размер */
+}
+
+/* Заголовок страницы */
+h1 {
+    margin-top: 0;
+    color: #2c3e50;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Стили формы */
+.registration-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+/* Поля ввода */
+.registration-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.registration-form input[type="email"],
+.registration-form input[type="password"],
+.registration-form input[type="tel"],
+.registration-form input[type="text"] {
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Плавный переход */
+    width: 100%; /* Убедитесь, что поля ввода занимают всю ширину контейнера */
+    box-sizing: border-box; /* Убедитесь, что padding включен в общий размер */
+}
+
+.registration-form input[type="email"]:focus,
+.registration-form input[type="password"]:focus,
+.registration-form input[type="tel"]:focus,
+.registration-form input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Сообщения об ошибках */
+.error-message {
+    color: #ff4d4d; /* Красный текст для ошибок */
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: block; /* Отображать по умолчанию */
+    background-color: #ffebee; /* Светлый фон для ошибок */
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* Кнопка отправки */
+.submit-button {
+    padding: 12px 24px;
+    border: none;
+    background: linear-gradient(145deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s; /* Плавный переход */
+    width: 100%; /* Убедитесь, что кнопка занимает всю ширину контейнера */
+}
+
+.submit-button:hover {
+    background: linear-gradient(145deg, #0056b3, #007bff);
+    transform: scale(1.05);
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .submit-button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .registration-form {
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .submit-button {
+        font-size: 12px;
+    }
+}
+
+.error-container {
+    margin-bottom: 15px;
+}
+
+input:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+input:invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+}
+

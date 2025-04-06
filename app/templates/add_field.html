@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Добавление поля</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/2.4.0/Control.FullScreen.min.css" />
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="/static/style/fields.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+</head>
+<body>
+    <div class="main-container">
+        <div class="fields-container">
+            <h1 class="fields-header"><i class="fas fa-tractor"></i> Новое поле</h1>
+
+            <!-- Основная информация -->
+            <div class="field-form-section">
+                <div class="field-form-group">
+                    <label><i class="fas fa-tag"></i> Название:</label>
+                    <input type="text" class="field-form-control" id="field-name" required>
+                </div>
+                <div class="field-form-group">
+                    <label><i class="fas fa-hashtag"></i> Номер:</label>
+                    <input type="text" class="field-form-control" id="field-number" required>
+                </div>
+            </div>
+
+            <!-- Тип почвы и площадь -->
+            <div class="field-form-section">
+                <div class="field-form-group">
+                    <label><i class="fas fa-seedling"></i> Тип почвы:</label>
+                    <select class="field-form-control" id="soil-type" required>
+                        <option value="Чернозем">Чернозем</option>
+                        <option value="Подзолистая">Подзолистая</option>
+                    </select>
+                </div>
+                <div class="field-form-group">
+                    <label><i class="fas fa-ruler"></i> Площадь (га):</label>
+                    <input type="number" class="field-form-control" id="area" step="0.01" readonly>
+                </div>
+            </div>
+
+            <!-- Выбор режима -->
+            <div class="field-form-section">
+                <div class="field-form-group">
+                    <label><i class="fas fa-map-marked-alt"></i> Способ ввода:</label>
+                    <select class="field-form-control" id="coordinate-method">
+                        <option value="map">На карте</option>
+                        <option value="manual">Вручную</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Переключатель слоев -->
+            <div class="field-form-section">
+                <div class="field-form-group">
+                    <label><i class="fas fa-layer-group"></i> Тип карты:</label>
+                    <div id="layer-control" class="leaflet-control-layers"></div>
+                </div>
+            </div>
+
+            <!-- Контейнеры для разных режимов -->
+            <div id="map-container">
+                <div id="fields-map"></div>
+            </div>
+
+            <div id="manual-coordinates-container" style="display: none;">
+                <div class="field-form-group">
+                    <label><i class="fas fa-map-pin"></i> Координаты (lat,lon):</label>
+                    <textarea
+                        id="manual-coordinates"
+                        class="field-form-control"
+                        rows="5"
+                        placeholder="55.7558,37.6173
+55.7519,37.6265
+55.7461,37.6234"
+                    ></textarea>
+                    <button class="field-submit-btn" onclick="parseManualCoords()">
+                        <i class="fas fa-sync-alt"></i> Применить
+                    </button>
+                </div>
+            </div>
+
+            <!-- Кнопка сохранения -->
+            <button class="field-submit-btn" onclick="saveField()">
+                <i class="fas fa-save"></i> Сохранить
+            </button>
+            <div id="error-message" class="field-error-message"></div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+    <script src="/static/js/fields.js"></script>
+</body>
+</html>

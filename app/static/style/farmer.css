@@ -1,0 +1,98 @@
+/* Файл: static/style/farmer.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.farmer-profile {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Добавлено для адаптивности */
+}
+
+.farmer-profile img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 20px;
+    margin-bottom: 10px; /* для отступа снизу при адаптивности */
+}
+
+.farmer-info {
+    flex-grow: 1;
+    min-width: 250px; /* для адаптивности */
+}
+
+.farmer-info h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #333;
+}
+
+.farmer-info p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.farmer-info p strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.back-link {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.back-link:hover {
+    background-color: #0056b3;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}

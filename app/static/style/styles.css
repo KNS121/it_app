@@ -1,0 +1,65 @@
+.farmer-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    background-color: #fff;
+}
+
+.farmer-card:hover {
+    transform: translateY(-5px);
+}
+
+
+.farmer-card img,
+.farmer-card .placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+    color: #666;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+.farmer-card .placeholder {
+    font-style: italic;
+    color: #888;
+}
+
+.farmer-card .details {
+    flex-grow: 1;
+}
+
+.farmer-card h2 {
+    margin: 0 0 10px;
+    font-size: 1.4em;
+    color: #2c3e50;
+}
+
+.farmer-card p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.farmer-card a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.farmer-card a:hover {
+    background-color: #0056b3;
+}

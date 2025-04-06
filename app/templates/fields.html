@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все поля</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1200px;
+        }
+        .field-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .field-card:hover {
+            transform: translateY(-5px);
+        }
+        .field-info h2 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+            color: #34495e;
+        }
+        .field-info p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список полей</h1>
+    <div class="container">
+        {% for field in fields %}
+        <div class="field-card">
+            <div class="field-info">
+                <h2>Поле #{{ field.id }}</h2>
+                <p><span class="label">Название:</span> {{ field.name }}</p>
+                <p><span class="label">Площадь в гектарах:</span> {{ field.area_hectares }}</p>
+                <p><span class="label">Севоборот:</span> {{ field.crop_rotation }}</p>
+                <p><span class="label">Технология выращивания:</span> {{ field.cultivation_technology }}</p>
+                <p><span class="label">Координаты:</span> {{ field.coordinates }}</p>
+                <p><span class="label">ID фермера:</span> {{ field.farmer_id }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

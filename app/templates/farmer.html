@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о фермере</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/farmer.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Информация о фермере</h1>
+        <div class="farmer-profile">
+            <img src="/static/images/default.webp" alt="Фото фермера">
+            <div class="farmer-info">
+                <h2>ID: {{ farmer.id }}</h2>
+                <p><strong>Полное имя:</strong> {{ farmer.first_name }} {{ farmer.last_name }}</p>
+                <p><strong>Email:</strong> {{ farmer.email }}</p>
+                <p><strong>Дата рождения:</strong> {{ farmer.date_of_birth }}</p>
+                <p><strong>Адрес:</strong> {{ farmer.address }}</p>
+                <p><strong>Телефонный номер:</strong> {{ farmer.phone_number }}</p>
+                <p><strong>Название предприятия:</strong> {{ farmer.farm_name }}</p>
+                <p><strong>Поля фермера:</strong> {{ farmer.fields }}</p>
+            </div>
+        </div>
+        <a href="/pages/farmers/" class="back-link">Вернуться к списку фермеров</a>
+    </div>
+</body>
+</html>
