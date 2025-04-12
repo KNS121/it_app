@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
+from typing import Optional
 
 # User Schemas
 class UserBase(BaseModel):
@@ -8,16 +9,18 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    is_teacher: bool
 
-class User(UserBase):
+class UserResponse(UserBase):
     id: int
     is_teacher: bool
 
     model_config = ConfigDict(from_attributes=True)
 
 # Auth Schemas
-class Token(BaseModel):
+class TokenPair(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
 
 class TokenData(BaseModel):
@@ -81,3 +84,8 @@ class Submission(SubmissionBase):
     assignment_id: int
     
     model_config = ConfigDict(from_attributes=True)
+
+# Добавляем в конец файла
+class User(UserResponse):
+    """Алиас для совместимости"""
+    pass
