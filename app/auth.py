@@ -23,7 +23,7 @@ def get_password_hash(password: str):
 async def authenticate_user(db: AsyncSession, email: str, password: str):
     user = await db.execute(select(User).where(User.email == email))
     user = user.scalar()
-    if not user or not pwd_context.verify(password, user.hashed_password):
+    if not user or not user.is_active or not pwd_context.verify(password, user.hashed_password):
         return False
     return user
 
