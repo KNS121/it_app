@@ -86,25 +86,29 @@
 #
 # target_metadata = Base.metadata
 
-from logging.config import fileConfig
-from alembic import context
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
 
-# Импорт моделей и движка
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
-from app.database import Base, engine  # Убедитесь, что Base импортирован из models
-from app.models import *
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))  # Добавляем корень проекта в PYTHONPATH
+
+from logging.config import fileConfig
+from alembic import context
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import pool
+import asyncio
+
+# Импорт моделей и конфигурации
+from app.models.models import Base
+from app.database import DATABASE_URL
 
 config = context.config
 fileConfig(config.config_file_name) if config.config_file_name else None
 
-# Указываем метаданные для автогенерации
 target_metadata = Base.metadata
 
 def run_migrations_offline():
+    """Run migrations in 'offline' mode."""
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -116,20 +120,26 @@ def run_migrations_offline():
         context.run_migrations()
 
 async def run_migrations_online():
-    async with engine.connect() as connection:
-        # Конфигурация контекста
-        await connection.run_sync(lambda sync_conn:
-            context.configure(
+    """Run migrations in 'online' mode."""
+    connectable = create_async_engine(
+        DATABASE_URL,
+        poolclass=pool.NullPool,
+        future=True
+    )
+
+    async with connectable.connect() as connection:
+        await connection.run_sync(
+            lambda sync_conn: context.configure(
                 connection=sync_conn,
                 target_metadata=target_metadata,
-                compare_type=True  # Если нужно сравнивать типы данных
+                compare_type=True,
+                compare_server_default=True
             )
         )
-        # Запуск миграций
+        # Исправленный вызов без аргументов
         await connection.run_sync(lambda sync_conn: context.run_migrations())
 
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    import asyncio
     asyncio.run(run_migrations_online())

@@ -1,48 +1,44 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from app.schemas.schemas import Subject, SubjectCreate
-from app.models.models import Subject as DBSubject, User
-from app.database import get_db
+from app.schemas import schemas
+from app.models import models
+from app import database
 from app.auth import get_current_user
+from sqlalchemy import select
 
 router = APIRouter(prefix="/subjects", tags=["subjects"])
 
-@router.post("/", response_model=Subject)
+
+@router.post("/", response_model=schemas.SubjectResponse)
 async def create_subject(
-    subject: SubjectCreate,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+        subject: schemas.SubjectCreate,
+        db: AsyncSession = Depends(database.get_db),
+        current_user: models.User = Depends(get_current_user)
 ):
-    if not current_user.is_teacher:
-        raise HTTPException(403, "Только для преподавателей")
-    
-    db_subject = DBSubject(**subject.dict(), teacher_id=current_user.id)
+    if current_user.role != "teacher":
+        raise HTTPException(status_code=403, detail="Only teachers can create subjects")
+
+    db_subject = models.Subject(**subject.dict(), teacher_id=current_user.id)
     db.add(db_subject)
     await db.commit()
     return db_subject
 
-@router.get("/", response_model=list[Subject])
-async def get_subjects(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(DBSubject))
-    return result.scalars().all()
 
-@router.post("/{subject_id}/enroll/{student_id}")
-async def enroll_student(
-    subject_id: int,
-    student_id: int,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+@router.get("/my", response_model=list[schemas.SubjectResponse])
+async def get_my_subjects(
+        db: AsyncSession = Depends(database.get_db),
+        current_user: models.User = Depends(get_current_user)
 ):
-    # Проверка что текущий пользователь - преподаватель предмета
-    subject = await db.get(DBSubject, subject_id)
-    if not subject or subject.teacher_id != current_user.id:
-        raise HTTPException(404, "Предмет не найден или доступ запрещен")
-    
-    student = await db.get(User, student_id)
-    if not student or student.is_teacher:
-        raise HTTPException(404, "Студент не найден")
-    
-    subject.students.append(student)
-    await db.commit()
-    return {"message": "Студент успешно записан"}
+    if current_user.role == "teacher":
+        return current_user.teacher_profile.subjects
+    else:
+        student = await db.execute(
+            select(models.Student).where(models.Student.user_id == current_user.id)
+        )
+        student = student.scalar()
+        return student.group.subjects

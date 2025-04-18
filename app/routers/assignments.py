@@ -1,42 +1,54 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))  # Добавляем корень проекта в PYTHONPATH
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from datetime import datetime
-from app.schemas.schemas import Assignment, AssignmentCreate
-from app.models.models import Assignment as DBAssignment, Subject, User
-from app.database import get_db
+from app.schemas import schemas
+from app.models import models
+from app import database
 from app.auth import get_current_user
+from datetime import datetime
 
 router = APIRouter(prefix="/assignments", tags=["assignments"])
 
-@router.post("/", response_model=Assignment)
-async def create_assignment(
-    assignment: AssignmentCreate,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    # Проверка прав преподавателя
-    subject = await db.get(Subject, assignment.subject_id)
-    if not subject or subject.teacher_id != current_user.id:
-        raise HTTPException(403, "Нет прав на создание задания")
-    
-    db_assignment = DBAssignment(**assignment.dict())
-    db.add(db_assignment)
-    await db.commit()
-    return db_assignment
 
-@router.get("/deadlines", response_model=list[dict])
-async def get_deadlines(
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+@router.post("/submit", response_model=schemas.SubmissionResponse)
+async def submit_assignment(
+        submission: schemas.SubmissionCreate,
+        db: AsyncSession = Depends(database.get_db),
+        current_user: models.User = Depends(get_current_user)
 ):
-    query = select(DBAssignment.title, DBAssignment.deadline)
-    
-    if current_user.is_teacher:
-        result = await db.execute(query)
-    else:
-        result = await db.execute(
-            query.join(Subject).where(Subject.students.any(id=current_user.id))
-        )
-    
-    return [{"title": a.title, "deadline": a.deadline} for a in result.all()]
+    if current_user.role != "student":
+        raise HTTPException(status_code=403, detail="Only students can submit assignments")
+
+    material = await db.get(models.CourseMaterial, submission.material_id)
+    if material.deadline and material.deadline < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Deadline has passed")
+
+    db_submission = models.AssignmentSubmission(
+        **submission.dict(),
+        student_id=current_user.id
+    )
+
+    db.add(db_submission)
+    await db.commit()
+    return db_submission
+
+
+@router.patch("/{submission_id}", response_model=schemas.SubmissionResponse)
+async def grade_assignment(
+        submission_id: int,
+        grade_data: schemas.SubmissionGrade,
+        db: AsyncSession = Depends(database.get_db),
+        current_user: models.User = Depends(get_current_user)
+):
+    if current_user.role != "teacher":
+        raise HTTPException(status_code=403, detail="Only teachers can grade assignments")
+
+    submission = await db.get(models.AssignmentSubmission, submission_id)
+    submission.grade = grade_data.grade
+    submission.status = "graded"
+    await db.commit()
+    return submission
